@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+         
+	<changeSet author="blog, Inc" id="post_tags100">
+	    <preConditions onFail="MARK_RAN">
+        	<tableExists tableName="post_tags" schemaName="public"/>
+        </preConditions>
+	    <addColumn tableName="post_tags">
+	    	<column name="versiono" type="BIGINT" defaultValue="0">
+	      		<constraints nullable="false"/>
+			</column>
+	   	</addColumn>
+	</changeSet>
+	<changeSet author="blog, Inc" id="categories101">
+	    <preConditions onFail="MARK_RAN">
+        	<tableExists tableName="categories" schemaName="public"/>
+        </preConditions>
+	    <addColumn tableName="categories">
+	    	<column name="versiono" type="BIGINT" defaultValue="0">
+	      		<constraints nullable="false"/>
+			</column>
+	   	</addColumn>
+	</changeSet>
+	<changeSet author="blog, Inc" id="comments102">
+	    <preConditions onFail="MARK_RAN">
+        	<tableExists tableName="comments" schemaName="public"/>
+        </preConditions>
+	    <addColumn tableName="comments">
+	    	<column name="versiono" type="BIGINT" defaultValue="0">
+	      		<constraints nullable="false"/>
+			</column>
+	   	</addColumn>
+	</changeSet>
+	<changeSet author="blog, Inc" id="posts103">
+	    <preConditions onFail="MARK_RAN">
+        	<tableExists tableName="posts" schemaName="public"/>
+        </preConditions>
+	    <addColumn tableName="posts">
+	    	<column name="versiono" type="BIGINT" defaultValue="0">
+	      		<constraints nullable="false"/>
+			</column>
+	   	</addColumn>
+	</changeSet>
+	<changeSet author="blog, Inc" id="post_categories104">
+	    <preConditions onFail="MARK_RAN">
+        	<tableExists tableName="post_categories" schemaName="public"/>
+        </preConditions>
+	    <addColumn tableName="post_categories">
+	    	<column name="versiono" type="BIGINT" defaultValue="0">
+	      		<constraints nullable="false"/>
+			</column>
+	   	</addColumn>
+	</changeSet>
+	<changeSet author="blog, Inc" id="users105">
+	    <preConditions onFail="MARK_RAN">
+        	<tableExists tableName="users" schemaName="public"/>
+        </preConditions>
+	    <addColumn tableName="users">
+	    	<column name="versiono" type="BIGINT" defaultValue="0">
+	      		<constraints nullable="false"/>
+			</column>
+	   	</addColumn>
+	</changeSet>
+	<changeSet author="blog, Inc" id="likes106">
+	    <preConditions onFail="MARK_RAN">
+        	<tableExists tableName="likes" schemaName="public"/>
+        </preConditions>
+	    <addColumn tableName="likes">
+	    	<column name="versiono" type="BIGINT" defaultValue="0">
+	      		<constraints nullable="false"/>
+			</column>
+	   	</addColumn>
+	</changeSet>
+	<changeSet author="blog, Inc" id="tags107">
+	    <preConditions onFail="MARK_RAN">
+        	<tableExists tableName="tags" schemaName="public"/>
+        </preConditions>
+	    <addColumn tableName="tags">
+	    	<column name="versiono" type="BIGINT" defaultValue="0">
+	      		<constraints nullable="false"/>
+			</column>
+	   	</addColumn>
+	</changeSet>
+         
+</databaseChangeLog>
