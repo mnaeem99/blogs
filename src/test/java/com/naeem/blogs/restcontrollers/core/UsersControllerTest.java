@@ -1,6 +1,7 @@
 package com.naeem.blogs.restcontrollers.core;
 
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
@@ -17,6 +18,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityExistsException;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -44,18 +46,26 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.naeem.blogs.commons.logging.LoggingHelper;
 import com.naeem.blogs.commons.search.SearchUtils;
-import com.naeem.blogs.application.core.users.UsersAppService;
-import com.naeem.blogs.application.core.users.dto.*;
-import com.naeem.blogs.domain.core.users.IUsersRepository;
-import com.naeem.blogs.domain.core.users.Users;
+import com.naeem.blogs.application.core.authorization.users.UsersAppService;
+import com.naeem.blogs.application.core.authorization.users.dto.*;
+import com.naeem.blogs.domain.core.authorization.users.IUsersRepository;
+import com.naeem.blogs.domain.core.authorization.users.Users;
 
 import com.naeem.blogs.domain.core.posts.IPostsRepository;
 import com.naeem.blogs.domain.core.posts.Posts;
-import com.naeem.blogs.domain.core.users.IUsersRepository;
-import com.naeem.blogs.domain.core.users.Users;
+import com.naeem.blogs.domain.core.authorization.users.IUsersRepository;
+import com.naeem.blogs.domain.core.authorization.users.Users;
 import com.naeem.blogs.application.core.comments.CommentsAppService;    
 import com.naeem.blogs.application.core.likes.LikesAppService;    
 import com.naeem.blogs.application.core.posts.PostsAppService;    
+import com.naeem.blogs.application.core.authorization.userspermission.UserspermissionAppService;    
+import com.naeem.blogs.application.core.authorization.usersrole.UsersroleAppService;    
+import com.naeem.blogs.security.JWTAppService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import com.naeem.blogs.application.core.authorization.usersrole.UsersroleAppService;
+import com.naeem.blogs.application.core.authorization.userspermission.UserspermissionAppService;
+import com.naeem.blogs.domain.core.authorization.userspreference.Userspreference;
+import com.naeem.blogs.domain.core.authorization.userspreference.IUserspreferenceManager;
 import com.naeem.blogs.DatabaseContainerConfig;
 import com.naeem.blogs.domain.core.*;
 
@@ -95,6 +105,23 @@ public class UsersControllerTest extends DatabaseContainerConfig{
     @Qualifier("postsAppService")
 	protected PostsAppService  postsAppService;
 	
+    @SpyBean
+    @Qualifier("userspermissionAppService")
+	protected UserspermissionAppService  userspermissionAppService;
+	
+    @SpyBean
+    @Qualifier("usersroleAppService")
+	protected UsersroleAppService  usersroleAppService;
+	
+    @SpyBean
+	protected IUserspreferenceManager userspreferenceManager;
+	
+	@SpyBean
+	protected JWTAppService jwtAppService;
+	
+	@SpyBean
+    protected PasswordEncoder pEncoder;
+    
 	@SpyBean
 	protected LoggingHelper logHelper;
 
@@ -134,6 +161,7 @@ public class UsersControllerTest extends DatabaseContainerConfig{
 		em.createNativeQuery("truncate table public.users CASCADE").executeUpdate();
 		em.createNativeQuery("truncate table public.posts CASCADE").executeUpdate();
 		em.createNativeQuery("truncate table public.users CASCADE").executeUpdate();
+		em.createNativeQuery("truncate table public.userspreference CASCADE").executeUpdate();
 		em.getTransaction().commit();
 	}
 	
@@ -179,11 +207,14 @@ public class UsersControllerTest extends DatabaseContainerConfig{
 		
 		Users usersEntity = new Users();
 		
-		usersEntity.setCreatedAt(SearchUtils.stringToLocalDateTime(yearCount+"-09-"+dayCount+" 05:25:22"));
-  		usersEntity.setEmail(String.valueOf(relationCount));
-  		usersEntity.setPasswordHash(String.valueOf(relationCount));
-		usersEntity.setUpdatedAt(SearchUtils.stringToLocalDateTime(yearCount+"-09-"+dayCount+" 05:25:22"));
-		usersEntity.setUserId(relationCount);
+        usersEntity.setEmailAddress("bbc"+countUsers+"@d.c");
+  		usersEntity.setFirstName(String.valueOf(relationCount));
+		usersEntity.setIsActive(false);
+		usersEntity.setIsEmailConfirmed(false);
+  		usersEntity.setLastName(String.valueOf(relationCount));
+  		usersEntity.setPassword(String.valueOf(relationCount));
+  		usersEntity.setPhoneNumber(String.valueOf(relationCount));
+		usersEntity.setUserId(Long.valueOf(relationCount));
   		usersEntity.setUsername(String.valueOf(relationCount));
 		usersEntity.setVersiono(0L);
 		relationCount++;
@@ -198,11 +229,14 @@ public class UsersControllerTest extends DatabaseContainerConfig{
 	public Users createEntity() {
 	
 		Users usersEntity = new Users();
-    	usersEntity.setCreatedAt(SearchUtils.stringToLocalDateTime("1996-09-01 09:15:22"));
-		usersEntity.setEmail("1");
-		usersEntity.setPasswordHash("1");
-    	usersEntity.setUpdatedAt(SearchUtils.stringToLocalDateTime("1996-09-01 09:15:22"));
-		usersEntity.setUserId(1);
+        usersEntity.setEmailAddress("bbc@d.c");
+		usersEntity.setFirstName("1");
+		usersEntity.setIsActive(false);
+		usersEntity.setIsEmailConfirmed(false);
+		usersEntity.setLastName("1");
+		usersEntity.setPassword("1");
+		usersEntity.setPhoneNumber("1");
+		usersEntity.setUserId(1L);
 		usersEntity.setUsername("1");
 		usersEntity.setVersiono(0L);
 		
@@ -211,10 +245,13 @@ public class UsersControllerTest extends DatabaseContainerConfig{
     public CreateUsersInput createUsersInput() {
 	
 	    CreateUsersInput usersInput = new CreateUsersInput();
-    	usersInput.setCreatedAt(SearchUtils.stringToLocalDateTime("1996-08-10 05:25:22"));
-  		usersInput.setEmail("5");
-  		usersInput.setPasswordHash("5");
-    	usersInput.setUpdatedAt(SearchUtils.stringToLocalDateTime("1996-08-10 05:25:22"));
+        usersInput.setEmailAddress("pmk@d.c");
+  		usersInput.setFirstName("5");
+		usersInput.setIsActive(false);
+		usersInput.setIsEmailConfirmed(false);
+  		usersInput.setLastName("5");
+  		usersInput.setPassword("5");
+  		usersInput.setPhoneNumber("5");
   		usersInput.setUsername("5");
 		
 		return usersInput;
@@ -222,11 +259,14 @@ public class UsersControllerTest extends DatabaseContainerConfig{
 
 	public Users createNewEntity() {
 		Users users = new Users();
-    	users.setCreatedAt(SearchUtils.stringToLocalDateTime("1996-08-11 05:35:22"));
-		users.setEmail("3");
-		users.setPasswordHash("3");
-    	users.setUpdatedAt(SearchUtils.stringToLocalDateTime("1996-08-11 05:35:22"));
-		users.setUserId(3);
+        users.setEmailAddress("bmc@d.c");
+		users.setFirstName("3");
+		users.setIsActive(false);
+		users.setIsEmailConfirmed(false);
+		users.setLastName("3");
+		users.setPassword("3");
+		users.setPhoneNumber("3");
+		users.setUserId(3L);
 		users.setUsername("3");
 		
 		return users;
@@ -234,11 +274,14 @@ public class UsersControllerTest extends DatabaseContainerConfig{
 	
 	public Users createUpdateEntity() {
 		Users users = new Users();
-    	users.setCreatedAt(SearchUtils.stringToLocalDateTime("1996-09-09 05:45:22"));
-		users.setEmail("4");
-		users.setPasswordHash("4");
-    	users.setUpdatedAt(SearchUtils.stringToLocalDateTime("1996-09-09 05:45:22"));
-		users.setUserId(4);
+        users.setEmailAddress("pmlp@d.c");
+		users.setFirstName("4");
+		users.setIsActive(false);
+		users.setIsEmailConfirmed(false);
+		users.setLastName("4");
+		users.setPassword("4");
+		users.setPhoneNumber("4");
+		users.setUserId(4L);
 		users.setUsername("4");
 		
 		return users;
@@ -247,8 +290,8 @@ public class UsersControllerTest extends DatabaseContainerConfig{
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
     
-		final UsersController usersController = new UsersController(usersAppService, commentsAppService, likesAppService, postsAppService,
-		logHelper,env);
+		final UsersController usersController = new UsersController(usersAppService, commentsAppService, likesAppService, postsAppService, userspermissionAppService, usersroleAppService,
+		pEncoder,jwtAppService,logHelper,env);
 		when(logHelper.getLogger()).thenReturn(loggerMock);
 		doNothing().when(loggerMock).error(anyString());
 
@@ -287,16 +330,42 @@ public class UsersControllerTest extends DatabaseContainerConfig{
 	}
 	@Test
 	public void CreateUsers_UsersDoesNotExist_ReturnStatusOk() throws Exception {
-		CreateUsersInput usersInput = createUsersInput();	
-		
-		
+        Mockito.doReturn(null).when(usersAppService).findByUsername(anyString());
+	  
+		CreateUsersInput users = createUsersInput();
 		ObjectWriter ow = new ObjectMapper().registerModule(new JavaTimeModule()).disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).writer().withDefaultPrettyPrinter();
-	
-		String json = ow.writeValueAsString(usersInput);
-
+		String json = ow.writeValueAsString(users);
+		
+		
 		mvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(json))
-		.andExpect(status().isOk());
-	}     
+		  .andExpect(status().isOk());
+		 
+		 users_repository.delete(createNewEntity());
+		 
+	}  
+    
+	@Test
+	public void CreateUsers_UsersAlreadyExists_ThrowEntityExistsException() throws Exception {
+	    FindUsersByUsernameOutput output= new FindUsersByUsernameOutput();
+        output.setEmailAddress("bpc@g.c");
+  		output.setFirstName("1");
+		output.setIsActive(false);
+		output.setIsEmailConfirmed(false);
+  		output.setLastName("1");
+  		output.setUsername("1");
+
+        Mockito.doReturn(output).when(usersAppService).findByUsername(anyString());
+	    CreateUsersInput users = createUsersInput();
+	    ObjectWriter ow = new ObjectMapper().registerModule(new JavaTimeModule()).disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).writer().withDefaultPrettyPrinter();
+	
+		String json = ow.writeValueAsString(users);
+       
+        org.assertj.core.api.Assertions.assertThatThrownBy(() -> mvc.perform(post("/users")
+        		.contentType(MediaType.APPLICATION_JSON).content(json))
+         .andExpect(status().isOk())).hasCause(new EntityExistsException("There already exists a users with Username =" + users.getUsername()));
+	} 
+	
+	
 	
 	
 	
@@ -304,7 +373,7 @@ public class UsersControllerTest extends DatabaseContainerConfig{
 	@Test
 	public void DeleteUsers_IdIsNotValid_ThrowEntityNotFoundException() {
 
-        doReturn(null).when(usersAppService).findById(999);
+        doReturn(null).when(usersAppService).findById(999L);
         org.assertj.core.api.Assertions.assertThatThrownBy(() ->  mvc.perform(delete("/users/999")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())).hasCause(new EntityNotFoundException("There does not exist a users with a id=999"));
@@ -318,16 +387,25 @@ public class UsersControllerTest extends DatabaseContainerConfig{
 	 	entity.setVersiono(0L);
 		entity = users_repository.save(entity);
 		
+		Userspreference userspreference = new Userspreference();
+		userspreference.setUserId(entity.getUserId());
+		userspreference.setUsers(entity);
+		userspreference.setTheme("Abc");
+		userspreference.setLanguage("abc");
+	 	userspreference=userspreferenceManager.create(userspreference);
 
 		FindUsersByIdOutput output= new FindUsersByIdOutput();
-		output.setEmail(entity.getEmail());
-		output.setPasswordHash(entity.getPasswordHash());
+		output.setEmailAddress(entity.getEmailAddress());
+		output.setFirstName(entity.getFirstName());
+		output.setIsActive(entity.getIsActive());
+		output.setIsEmailConfirmed(entity.getIsEmailConfirmed());
+		output.setLastName(entity.getLastName());
 		output.setUserId(entity.getUserId());
 		output.setUsername(entity.getUsername());
 		
-         Mockito.doReturn(output).when(usersAppService).findById(entity.getUserId());
+         Mockito.doReturn(output).when(usersAppService).findById(any(Long.class));
        
-    //    Mockito.when(usersAppService.findById(entity.getUserId())).thenReturn(output);
+      //   Mockito.when(usersAppService.findById(any(Long.class))).thenReturn(output);
         
 		mvc.perform(delete("/users/" + entity.getUserId()+"/")
 				.contentType(MediaType.APPLICATION_JSON))
@@ -338,14 +416,16 @@ public class UsersControllerTest extends DatabaseContainerConfig{
 	@Test
 	public void UpdateUsers_UsersDoesNotExist_ReturnStatusNotFound() throws Exception {
    
-        doReturn(null).when(usersAppService).findById(999);
+        doReturn(null).when(usersAppService).findById(999L);
         
         UpdateUsersInput users = new UpdateUsersInput();
-		users.setCreatedAt(SearchUtils.stringToLocalDateTime("1996-09-28 07:15:22"));
-  		users.setEmail("999");
-  		users.setPasswordHash("999");
-		users.setUpdatedAt(SearchUtils.stringToLocalDateTime("1996-09-28 07:15:22"));
-		users.setUserId(999);
+        users.setEmailAddress("bmc@g.c");
+  		users.setFirstName("999");
+		users.setIsActive(false);
+		users.setIsEmailConfirmed(false);
+  		users.setLastName("999");
+  		users.setPhoneNumber("999");
+		users.setUserId(999L);
   		users.setUsername("999");
 
 		ObjectWriter ow = new ObjectMapper().registerModule(new JavaTimeModule()).disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).writer().withDefaultPrettyPrinter();
@@ -364,22 +444,28 @@ public class UsersControllerTest extends DatabaseContainerConfig{
 		entity.setVersiono(0L);
 		
 		entity = users_repository.save(entity);
-		FindUsersByIdOutput output= new FindUsersByIdOutput();
-		output.setCreatedAt(entity.getCreatedAt());
-		output.setEmail(entity.getEmail());
-		output.setPasswordHash(entity.getPasswordHash());
-		output.setUpdatedAt(entity.getUpdatedAt());
+		FindUsersWithAllFieldsByIdOutput output= new FindUsersWithAllFieldsByIdOutput();
+		output.setEmailAddress(entity.getEmailAddress());
+		output.setFirstName(entity.getFirstName());
+		output.setIsActive(entity.getIsActive());
+		output.setIsEmailConfirmed(entity.getIsEmailConfirmed());
+		output.setLastName(entity.getLastName());
+		output.setPassword(entity.getPassword());
+		output.setPhoneNumber(entity.getPhoneNumber());
 		output.setUserId(entity.getUserId());
 		output.setUsername(entity.getUsername());
 		output.setVersiono(entity.getVersiono());
 		
-        Mockito.when(usersAppService.findById(entity.getUserId())).thenReturn(output);
-        
+		Mockito.when(usersAppService.findWithAllFieldsById(entity.getUserId())).thenReturn(output);
         
 		
 		UpdateUsersInput usersInput = new UpdateUsersInput();
-		usersInput.setEmail(entity.getEmail());
-		usersInput.setPasswordHash(entity.getPasswordHash());
+		usersInput.setEmailAddress(entity.getEmailAddress());
+		usersInput.setFirstName(entity.getFirstName());
+		usersInput.setIsActive(entity.getIsActive());
+		usersInput.setIsEmailConfirmed(entity.getIsEmailConfirmed());
+		usersInput.setLastName(entity.getLastName());
+		usersInput.setPassword(entity.getPassword());
 		usersInput.setUserId(entity.getUserId());
 		usersInput.setUsername(entity.getUsername());
 		
@@ -470,6 +556,52 @@ public class UsersControllerTest extends DatabaseContainerConfig{
 		Mockito.when(usersAppService.parsePostsJoinColumn(anyString())).thenReturn(null);
 	 		  		    		  
 	    org.assertj.core.api.Assertions.assertThatThrownBy(() -> mvc.perform(get("/users/1/posts?search=authorId[equals]=1&limit=10&offset=1")
+				.contentType(MediaType.APPLICATION_JSON))
+		.andExpect(status().isOk())).hasCause(new EntityNotFoundException("Invalid join column"));
+	}    
+	
+	
+	@Test
+	public void GetUserspermissions_searchIsNotEmptyAndPropertyIsValid_ReturnList() throws Exception {
+
+		Map<String,String> joinCol = new HashMap<String,String>();
+		joinCol.put("userId", "1");
+		
+        Mockito.when(usersAppService.parseUserspermissionsJoinColumn("usersUserId")).thenReturn(joinCol);
+		mvc.perform(get("/users/1/userspermissions?search=usersUserId[equals]=1&limit=10&offset=1")
+				.contentType(MediaType.APPLICATION_JSON))
+	    		  .andExpect(status().isOk());
+	}  
+	
+	@Test
+	public void GetUserspermissions_searchIsNotEmpty() {
+	
+		Mockito.when(usersAppService.parseUserspermissionsJoinColumn(anyString())).thenReturn(null);
+	 		  		    		  
+	    org.assertj.core.api.Assertions.assertThatThrownBy(() -> mvc.perform(get("/users/1/userspermissions?search=usersUserId[equals]=1&limit=10&offset=1")
+				.contentType(MediaType.APPLICATION_JSON))
+		.andExpect(status().isOk())).hasCause(new EntityNotFoundException("Invalid join column"));
+	}    
+	
+	
+	@Test
+	public void GetUsersroles_searchIsNotEmptyAndPropertyIsValid_ReturnList() throws Exception {
+
+		Map<String,String> joinCol = new HashMap<String,String>();
+		joinCol.put("userId", "1");
+		
+        Mockito.when(usersAppService.parseUsersrolesJoinColumn("usersUserId")).thenReturn(joinCol);
+		mvc.perform(get("/users/1/usersroles?search=usersUserId[equals]=1&limit=10&offset=1")
+				.contentType(MediaType.APPLICATION_JSON))
+	    		  .andExpect(status().isOk());
+	}  
+	
+	@Test
+	public void GetUsersroles_searchIsNotEmpty() {
+	
+		Mockito.when(usersAppService.parseUsersrolesJoinColumn(anyString())).thenReturn(null);
+	 		  		    		  
+	    org.assertj.core.api.Assertions.assertThatThrownBy(() -> mvc.perform(get("/users/1/usersroles?search=usersUserId[equals]=1&limit=10&offset=1")
 				.contentType(MediaType.APPLICATION_JSON))
 		.andExpect(status().isOk())).hasCause(new EntityNotFoundException("Invalid join column"));
 	}    

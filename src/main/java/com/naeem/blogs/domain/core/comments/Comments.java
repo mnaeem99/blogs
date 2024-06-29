@@ -2,7 +2,7 @@ package com.naeem.blogs.domain.core.comments;
 import javax.persistence.*;
 import java.time.*;
 import com.naeem.blogs.domain.core.posts.Posts;
-import com.naeem.blogs.domain.core.users.Users;
+import com.naeem.blogs.domain.core.authorization.users.Users;
 import com.naeem.blogs.domain.core.abstractentity.AbstractEntity;
 import lombok.Getter;
 import lombok.Setter;

@@ -7,7 +7,7 @@ import com.naeem.blogs.domain.extended.posttags.IPostTagsRepositoryExtended;
 import com.naeem.blogs.domain.core.posttags.PostTags;
 import com.naeem.blogs.domain.extended.posts.IPostsRepositoryExtended;
 import com.naeem.blogs.domain.extended.tags.ITagsRepositoryExtended;
-import com.naeem.blogs.domain.extended.users.IUsersRepositoryExtended;
+import com.naeem.blogs.domain.extended.authorization.users.IUsersRepositoryExtended;
 import com.naeem.blogs.application.extended.posts.PostsAppServiceExtended;    
 import com.naeem.blogs.application.extended.tags.TagsAppServiceExtended;    
 

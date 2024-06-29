@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Pageable;
@@ -42,6 +43,7 @@ public class PostCategoriesController {
 
 	@NonNull protected final Environment env;
 
+    @PreAuthorize("hasAnyAuthority('POSTCATEGORIESENTITY_CREATE')")
 	@RequestMapping(method = RequestMethod.POST, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<CreatePostCategoriesOutput> create( @RequestBody @Valid CreatePostCategoriesInput postCategories) {
 		CreatePostCategoriesOutput output=_postCategoriesAppService.create(postCategories);
@@ -49,6 +51,7 @@ public class PostCategoriesController {
 	}
 
 	// ------------ Delete postCategories ------------
+	@PreAuthorize("hasAnyAuthority('POSTCATEGORIESENTITY_DELETE')")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, consumes = {"application/json"})
 	public void delete(@PathVariable String id) {
@@ -68,6 +71,7 @@ public class PostCategoriesController {
 
 
 	// ------------ Update postCategories ------------
+    @PreAuthorize("hasAnyAuthority('POSTCATEGORIESENTITY_UPDATE')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<UpdatePostCategoriesOutput> update(@PathVariable String id,  @RequestBody @Valid UpdatePostCategoriesInput postCategories) {
 
@@ -88,6 +92,7 @@ public class PostCategoriesController {
 	}
     
 
+    @PreAuthorize("hasAnyAuthority('POSTCATEGORIESENTITY_READ')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<FindPostCategoriesByIdOutput> findById(@PathVariable String id) {
 
@@ -103,6 +108,7 @@ public class PostCategoriesController {
     	
 		return new ResponseEntity<>(output, HttpStatus.OK);
 	}
+    @PreAuthorize("hasAnyAuthority('POSTCATEGORIESENTITY_READ')")
 	@RequestMapping(method = RequestMethod.GET, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<List<FindPostCategoriesByIdOutput>> find(@RequestParam(value="search", required=false) String search, @RequestParam(value = "offset", required=false) String offset, @RequestParam(value = "limit", required=false) String limit, Sort sort) throws EntityNotFoundException, MalformedURLException {
 
@@ -115,6 +121,7 @@ public class PostCategoriesController {
 		return new ResponseEntity<>(_postCategoriesAppService.find(searchCriteria,Pageable), HttpStatus.OK);
 	}
 	
+    @PreAuthorize("hasAnyAuthority('POSTCATEGORIESENTITY_READ')")
 	@RequestMapping(value = "/{id}/categories", method = RequestMethod.GET, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<GetCategoriesOutput> getCategories(@PathVariable String id) {
 		PostCategoriesId postcategoriesid =_postCategoriesAppService.parsePostCategoriesKey(id);
@@ -129,6 +136,7 @@ public class PostCategoriesController {
 
 		return new ResponseEntity<>(output, HttpStatus.OK);
 	}
+    @PreAuthorize("hasAnyAuthority('POSTCATEGORIESENTITY_READ')")
 	@RequestMapping(value = "/{id}/posts", method = RequestMethod.GET, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<GetPostsOutput> getPosts(@PathVariable String id) {
 		PostCategoriesId postcategoriesid =_postCategoriesAppService.parsePostCategoriesKey(id);

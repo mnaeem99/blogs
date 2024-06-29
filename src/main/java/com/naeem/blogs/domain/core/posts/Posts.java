@@ -7,7 +7,7 @@ import com.naeem.blogs.domain.core.comments.Comments;
 import com.naeem.blogs.domain.core.likes.Likes;
 import com.naeem.blogs.domain.core.postcategories.PostCategories;
 import com.naeem.blogs.domain.core.posttags.PostTags;
-import com.naeem.blogs.domain.core.users.Users;
+import com.naeem.blogs.domain.core.authorization.users.Users;
 import com.naeem.blogs.domain.core.abstractentity.AbstractEntity;
 import lombok.Getter;
 import lombok.Setter;

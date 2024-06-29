@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +39,7 @@ public class TagsController {
 
 	@NonNull protected final Environment env;
 
+    @PreAuthorize("hasAnyAuthority('TAGSENTITY_CREATE')")
 	@RequestMapping(method = RequestMethod.POST, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<CreateTagsOutput> create( @RequestBody @Valid CreateTagsInput tags) {
 		CreateTagsOutput output=_tagsAppService.create(tags);
@@ -45,6 +47,7 @@ public class TagsController {
 	}
 
 	// ------------ Delete tags ------------
+	@PreAuthorize("hasAnyAuthority('TAGSENTITY_DELETE')")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, consumes = {"application/json"})
 	public void delete(@PathVariable String id) {
@@ -59,6 +62,7 @@ public class TagsController {
 
 
 	// ------------ Update tags ------------
+    @PreAuthorize("hasAnyAuthority('TAGSENTITY_UPDATE')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<UpdateTagsOutput> update(@PathVariable String id,  @RequestBody @Valid UpdateTagsInput tags) {
 
@@ -73,6 +77,7 @@ public class TagsController {
 	}
     
 
+    @PreAuthorize("hasAnyAuthority('TAGSENTITY_READ')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<FindTagsByIdOutput> findById(@PathVariable String id) {
 
@@ -83,6 +88,7 @@ public class TagsController {
     	
 		return new ResponseEntity<>(output, HttpStatus.OK);
 	}
+    @PreAuthorize("hasAnyAuthority('TAGSENTITY_READ')")
 	@RequestMapping(method = RequestMethod.GET, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<List<FindTagsByIdOutput>> find(@RequestParam(value="search", required=false) String search, @RequestParam(value = "offset", required=false) String offset, @RequestParam(value = "limit", required=false) String limit, Sort sort) throws EntityNotFoundException, MalformedURLException {
 
@@ -95,6 +101,7 @@ public class TagsController {
 		return new ResponseEntity<>(_tagsAppService.find(searchCriteria,Pageable), HttpStatus.OK);
 	}
 	
+    @PreAuthorize("hasAnyAuthority('TAGSENTITY_READ')")
 	@RequestMapping(value = "/{id}/postTags", method = RequestMethod.GET, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<List<FindPostTagsByIdOutput>> getPostTags(@PathVariable String id, @RequestParam(value="search", required=false) String search, @RequestParam(value = "offset", required=false) String offset, @RequestParam(value = "limit", required=false) String limit, Sort sort) throws EntityNotFoundException, MalformedURLException {
    		if (offset == null) { offset = env.getProperty("blog.offset.default"); }

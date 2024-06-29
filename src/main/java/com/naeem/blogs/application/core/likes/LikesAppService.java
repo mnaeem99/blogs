@@ -8,8 +8,8 @@ import com.naeem.blogs.domain.core.likes.QLikes;
 import com.naeem.blogs.domain.core.likes.Likes;
 import com.naeem.blogs.domain.core.posts.IPostsRepository;
 import com.naeem.blogs.domain.core.posts.Posts;
-import com.naeem.blogs.domain.core.users.IUsersRepository;
-import com.naeem.blogs.domain.core.users.Users;
+import com.naeem.blogs.domain.core.authorization.users.IUsersRepository;
+import com.naeem.blogs.domain.core.authorization.users.Users;
 
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -66,7 +66,7 @@ public class LikesAppService implements ILikesAppService {
 			return null;
 		}
 	  	if(input.getUserId()!=null) {
-			foundUsers = _usersRepository.findById(input.getUserId()).orElse(null);
+		    foundUsers = _usersRepository.findById(Long.parseLong(input.getUserId().toString())).orElse(null);
 			
 			if(foundUsers!=null) {
 				foundUsers.addLikes(likes);
@@ -107,7 +107,7 @@ public class LikesAppService implements ILikesAppService {
 		}
         
 	  	if(input.getUserId()!=null) { 
-			foundUsers = _usersRepository.findById(input.getUserId()).orElse(null);
+		    foundUsers = _usersRepository.findById(Long.parseLong(input.getUserId().toString())).orElse(null);
 		
 			if(foundUsers!=null) {
 				foundUsers.addLikes(likes);
@@ -289,11 +289,11 @@ public class LikesAppService implements ILikesAppService {
 			}
 		    if(details.getKey().replace("%20","").trim().equals("users")) {
 				if(details.getValue().getOperator().equals("contains")) {
-					builder.and(likes.users.email.likeIgnoreCase("%"+ details.getValue().getSearchValue() + "%"));
+					builder.and(likes.users.username.likeIgnoreCase("%"+ details.getValue().getSearchValue() + "%"));
 				} else if(details.getValue().getOperator().equals("equals")) {
-					builder.and(likes.users.email.eq(details.getValue().getSearchValue()));
+					builder.and(likes.users.username.eq(details.getValue().getSearchValue()));
 				} else if(details.getValue().getOperator().equals("notEqual")) {
-					builder.and(likes.users.email.ne(details.getValue().getSearchValue()));
+					builder.and(likes.users.username.ne(details.getValue().getSearchValue()));
 				}
 			}
 		}
@@ -305,12 +305,12 @@ public class LikesAppService implements ILikesAppService {
         
         }
 		for (Map.Entry<String, String> joinCol : joinColumns.entrySet()) {
-		if(joinCol != null && joinCol.getKey().equals("userId")) {
-		    builder.and(likes.users.userId.eq(Integer.parseInt(joinCol.getValue())));
-		}
+        if(joinCol != null && joinCol.getKey().equals("userId")) {
+		    builder.and(likes.users.userId.eq(Long.parseLong(joinCol.getValue())));
+        }
         
 		if(joinCol != null && joinCol.getKey().equals("users")) {
-		    builder.and(likes.users.email.eq(joinCol.getValue()));
+		    builder.and(likes.users.username.eq(joinCol.getValue()));
         }
         }
 		return builder;

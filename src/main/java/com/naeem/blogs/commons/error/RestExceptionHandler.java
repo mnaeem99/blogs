@@ -1,6 +1,7 @@
 package com.naeem.blogs.commons.error;
 
 import com.naeem.blogs.commons.logging.LoggingHelper;
+import org.quartz.SchedulerException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
@@ -163,7 +164,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	 * @return the ApiError object
 	 */
 	@Override
-	protected ResponseEntity<java.lang.Object> handleHttpRequestMethodNotSupported(
+	protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
 			HttpRequestMethodNotSupportedException ex,
 			HttpHeaders headers,
 			HttpStatus status,
@@ -267,6 +268,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		logHelper.getLogger().error("An Exception Occurred:", ex);
 		String error = "Internal error occured" ;
 		return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, error, ex));
+	}
+	
+	@ExceptionHandler(SchedulerException.class)
+	public ResponseEntity<Object> handleSchedulerException(Exception ex, WebRequest request) {
+		logHelper.getLogger().error("An Exception Occurred:", ex);
+		ApiError apiError = new ApiError(HttpStatus.NOT_FOUND);
+		apiError.setMessage(ex.getMessage());
+		return buildResponseEntity(apiError);
 	}
 	
 	private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {

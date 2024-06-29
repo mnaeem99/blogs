@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import com.naeem.blogs.domain.core.posts.Posts;
-import com.naeem.blogs.domain.core.users.Users;
+import com.naeem.blogs.domain.core.authorization.users.Users;
 import com.naeem.blogs.application.core.likes.dto.*;
 import com.naeem.blogs.domain.core.likes.Likes;
 import java.time.*;
@@ -17,7 +17,7 @@ public interface ILikesMapper {
    @Mapping(source = "entity.posts.postId", target = "postId"),                   
    @Mapping(source = "entity.posts.postId", target = "postsDescriptiveField"),                    
    @Mapping(source = "entity.users.userId", target = "userId"),                   
-   @Mapping(source = "entity.users.email", target = "usersDescriptiveField"),                    
+   @Mapping(source = "entity.users.username", target = "usersDescriptiveField"),                    
    }) 
    CreateLikesOutput likesToCreateLikesOutput(Likes entity);
    
@@ -27,29 +27,28 @@ public interface ILikesMapper {
     @Mapping(source = "entity.posts.postId", target = "postId"),                   
     @Mapping(source = "entity.posts.postId", target = "postsDescriptiveField"),                    
     @Mapping(source = "entity.users.userId", target = "userId"),                   
-    @Mapping(source = "entity.users.email", target = "usersDescriptiveField"),                    
+    @Mapping(source = "entity.users.username", target = "usersDescriptiveField"),                    
    	}) 
    	UpdateLikesOutput likesToUpdateLikesOutput(Likes entity);
    	@Mappings({ 
    	@Mapping(source = "entity.posts.postId", target = "postId"),                   
    	@Mapping(source = "entity.posts.postId", target = "postsDescriptiveField"),                    
    	@Mapping(source = "entity.users.userId", target = "userId"),                   
-   	@Mapping(source = "entity.users.email", target = "usersDescriptiveField"),                    
+   	@Mapping(source = "entity.users.username", target = "usersDescriptiveField"),                    
    	}) 
    	FindLikesByIdOutput likesToFindLikesByIdOutput(Likes entity);
 
 
    @Mappings({
-   @Mapping(source = "users.createdAt", target = "createdAt"),                  
-   @Mapping(source = "foundLikes.likeId", target = "likesLikeId"),
-   })
-   GetUsersOutput usersToGetUsersOutput(Users users, Likes foundLikes);
-   
-   @Mappings({
    @Mapping(source = "posts.createdAt", target = "createdAt"),                  
    @Mapping(source = "foundLikes.likeId", target = "likesLikeId"),
    })
    GetPostsOutput postsToGetPostsOutput(Posts posts, Likes foundLikes);
+   
+   @Mappings({
+   @Mapping(source = "foundLikes.likeId", target = "likesLikeId"),
+   })
+   GetUsersOutput usersToGetUsersOutput(Users users, Likes foundLikes);
    
 }
 

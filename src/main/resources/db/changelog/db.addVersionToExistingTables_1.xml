@@ -6,7 +6,7 @@
   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
          
-	<changeSet author="blog, Inc" id="post_tags100">
+		<changeSet author="blog, Inc" id="post_tags100">
 	    <preConditions onFail="MARK_RAN">
         	<tableExists tableName="post_tags" schemaName="public"/>
         </preConditions>
@@ -16,7 +16,27 @@
 			</column>
 	   	</addColumn>
 	</changeSet>
-	<changeSet author="blog, Inc" id="categories101">
+	<changeSet author="blog, Inc" id="userspreference101">
+	    <preConditions onFail="MARK_RAN">
+        	<tableExists tableName="userspreference" schemaName="public"/>
+        </preConditions>
+	    <addColumn tableName="userspreference">
+	    	<column name="versiono" type="BIGINT" defaultValue="0">
+	      		<constraints nullable="false"/>
+			</column>
+	   	</addColumn>
+	</changeSet>
+	<changeSet author="blog, Inc" id="jwt_entity102">
+	    <preConditions onFail="MARK_RAN">
+        	<tableExists tableName="jwt_entity" schemaName="public"/>
+        </preConditions>
+	    <addColumn tableName="jwt_entity">
+	    	<column name="versiono" type="BIGINT" defaultValue="0">
+	      		<constraints nullable="false"/>
+			</column>
+	   	</addColumn>
+	</changeSet>
+	<changeSet author="blog, Inc" id="categories103">
 	    <preConditions onFail="MARK_RAN">
         	<tableExists tableName="categories" schemaName="public"/>
         </preConditions>
@@ -26,7 +46,7 @@
 			</column>
 	   	</addColumn>
 	</changeSet>
-	<changeSet author="blog, Inc" id="comments102">
+	<changeSet author="blog, Inc" id="comments104">
 	    <preConditions onFail="MARK_RAN">
         	<tableExists tableName="comments" schemaName="public"/>
         </preConditions>
@@ -36,7 +56,7 @@
 			</column>
 	   	</addColumn>
 	</changeSet>
-	<changeSet author="blog, Inc" id="posts103">
+	<changeSet author="blog, Inc" id="posts105">
 	    <preConditions onFail="MARK_RAN">
         	<tableExists tableName="posts" schemaName="public"/>
         </preConditions>
@@ -46,17 +66,17 @@
 			</column>
 	   	</addColumn>
 	</changeSet>
-	<changeSet author="blog, Inc" id="post_categories104">
+	<changeSet author="blog, Inc" id="rolepermission106">
 	    <preConditions onFail="MARK_RAN">
-        	<tableExists tableName="post_categories" schemaName="public"/>
+        	<tableExists tableName="rolepermission" schemaName="public"/>
         </preConditions>
-	    <addColumn tableName="post_categories">
+	    <addColumn tableName="rolepermission">
 	    	<column name="versiono" type="BIGINT" defaultValue="0">
 	      		<constraints nullable="false"/>
 			</column>
 	   	</addColumn>
 	</changeSet>
-	<changeSet author="blog, Inc" id="users105">
+	<changeSet author="blog, Inc" id="users107">
 	    <preConditions onFail="MARK_RAN">
         	<tableExists tableName="users" schemaName="public"/>
         </preConditions>
@@ -66,7 +86,57 @@
 			</column>
 	   	</addColumn>
 	</changeSet>
-	<changeSet author="blog, Inc" id="likes106">
+	<changeSet author="blog, Inc" id="role108">
+	    <preConditions onFail="MARK_RAN">
+        	<tableExists tableName="role" schemaName="public"/>
+        </preConditions>
+	    <addColumn tableName="role">
+	    	<column name="versiono" type="BIGINT" defaultValue="0">
+	      		<constraints nullable="false"/>
+			</column>
+	   	</addColumn>
+	</changeSet>
+	<changeSet author="blog, Inc" id="tokenverification109">
+	    <preConditions onFail="MARK_RAN">
+        	<tableExists tableName="tokenverification" schemaName="public"/>
+        </preConditions>
+	    <addColumn tableName="tokenverification">
+	    	<column name="versiono" type="BIGINT" defaultValue="0">
+	      		<constraints nullable="false"/>
+			</column>
+	   	</addColumn>
+	</changeSet>
+	<changeSet author="blog, Inc" id="permission110">
+	    <preConditions onFail="MARK_RAN">
+        	<tableExists tableName="permission" schemaName="public"/>
+        </preConditions>
+	    <addColumn tableName="permission">
+	    	<column name="versiono" type="BIGINT" defaultValue="0">
+	      		<constraints nullable="false"/>
+			</column>
+	   	</addColumn>
+	</changeSet>
+	<changeSet author="blog, Inc" id="usersrole111">
+	    <preConditions onFail="MARK_RAN">
+        	<tableExists tableName="usersrole" schemaName="public"/>
+        </preConditions>
+	    <addColumn tableName="usersrole">
+	    	<column name="versiono" type="BIGINT" defaultValue="0">
+	      		<constraints nullable="false"/>
+			</column>
+	   	</addColumn>
+	</changeSet>
+	<changeSet author="blog, Inc" id="post_categories112">
+	    <preConditions onFail="MARK_RAN">
+        	<tableExists tableName="post_categories" schemaName="public"/>
+        </preConditions>
+	    <addColumn tableName="post_categories">
+	    	<column name="versiono" type="BIGINT" defaultValue="0">
+	      		<constraints nullable="false"/>
+			</column>
+	   	</addColumn>
+	</changeSet>
+	<changeSet author="blog, Inc" id="likes113">
 	    <preConditions onFail="MARK_RAN">
         	<tableExists tableName="likes" schemaName="public"/>
         </preConditions>
@@ -76,7 +146,17 @@
 			</column>
 	   	</addColumn>
 	</changeSet>
-	<changeSet author="blog, Inc" id="tags107">
+	<changeSet author="blog, Inc" id="userspermission114">
+	    <preConditions onFail="MARK_RAN">
+        	<tableExists tableName="userspermission" schemaName="public"/>
+        </preConditions>
+	    <addColumn tableName="userspermission">
+	    	<column name="versiono" type="BIGINT" defaultValue="0">
+	      		<constraints nullable="false"/>
+			</column>
+	   	</addColumn>
+	</changeSet>
+	<changeSet author="blog, Inc" id="tags115">
 	    <preConditions onFail="MARK_RAN">
         	<tableExists tableName="tags" schemaName="public"/>
         </preConditions>

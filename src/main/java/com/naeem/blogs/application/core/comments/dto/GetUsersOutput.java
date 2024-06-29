@@ -7,11 +7,14 @@ import lombok.Setter;
 @Getter @Setter
 public class GetUsersOutput {
 
- 	private LocalDateTime createdAt;
- 	private String email;
- 	private String passwordHash;
- 	private LocalDateTime updatedAt;
- 	private Integer userId;
+ 	private String emailAddress;
+ 	private String firstName;
+ 	private Boolean isActive;
+ 	private Boolean isEmailConfirmed;
+ 	private String lastName;
+ 	private String password;
+ 	private String phoneNumber;
+ 	private Long userId;
  	private String username;
   	private Integer commentsCommentId;
 

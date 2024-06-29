@@ -8,8 +8,8 @@ import com.naeem.blogs.domain.core.comments.QComments;
 import com.naeem.blogs.domain.core.comments.Comments;
 import com.naeem.blogs.domain.core.posts.IPostsRepository;
 import com.naeem.blogs.domain.core.posts.Posts;
-import com.naeem.blogs.domain.core.users.IUsersRepository;
-import com.naeem.blogs.domain.core.users.Users;
+import com.naeem.blogs.domain.core.authorization.users.IUsersRepository;
+import com.naeem.blogs.domain.core.authorization.users.Users;
 
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -66,7 +66,7 @@ public class CommentsAppService implements ICommentsAppService {
 			return null;
 		}
 	  	if(input.getAuthorId()!=null) {
-			foundUsers = _usersRepository.findById(input.getAuthorId()).orElse(null);
+		    foundUsers = _usersRepository.findById(Long.parseLong(input.getAuthorId().toString())).orElse(null);
 			
 			if(foundUsers!=null) {
 				foundUsers.addComments(comments);
@@ -107,7 +107,7 @@ public class CommentsAppService implements ICommentsAppService {
 		}
         
 	  	if(input.getAuthorId()!=null) { 
-			foundUsers = _usersRepository.findById(input.getAuthorId()).orElse(null);
+		    foundUsers = _usersRepository.findById(Long.parseLong(input.getAuthorId().toString())).orElse(null);
 		
 			if(foundUsers!=null) {
 				foundUsers.addComments(comments);
@@ -299,11 +299,11 @@ public class CommentsAppService implements ICommentsAppService {
 			}
 		    if(details.getKey().replace("%20","").trim().equals("users")) {
 				if(details.getValue().getOperator().equals("contains")) {
-					builder.and(comments.users.email.likeIgnoreCase("%"+ details.getValue().getSearchValue() + "%"));
+					builder.and(comments.users.username.likeIgnoreCase("%"+ details.getValue().getSearchValue() + "%"));
 				} else if(details.getValue().getOperator().equals("equals")) {
-					builder.and(comments.users.email.eq(details.getValue().getSearchValue()));
+					builder.and(comments.users.username.eq(details.getValue().getSearchValue()));
 				} else if(details.getValue().getOperator().equals("notEqual")) {
-					builder.and(comments.users.email.ne(details.getValue().getSearchValue()));
+					builder.and(comments.users.username.ne(details.getValue().getSearchValue()));
 				}
 			}
 		}
@@ -315,12 +315,12 @@ public class CommentsAppService implements ICommentsAppService {
         
         }
 		for (Map.Entry<String, String> joinCol : joinColumns.entrySet()) {
-		if(joinCol != null && joinCol.getKey().equals("authorId")) {
-		    builder.and(comments.users.userId.eq(Integer.parseInt(joinCol.getValue())));
-		}
+        if(joinCol != null && joinCol.getKey().equals("authorId")) {
+		    builder.and(comments.users.userId.eq(Long.parseLong(joinCol.getValue())));
+        }
         
 		if(joinCol != null && joinCol.getKey().equals("users")) {
-		    builder.and(comments.users.email.eq(joinCol.getValue()));
+		    builder.and(comments.users.username.eq(joinCol.getValue()));
         }
         }
 		return builder;

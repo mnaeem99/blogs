@@ -5,14 +5,14 @@ import com.naeem.blogs.commons.logging.LoggingHelper;
 import com.naeem.blogs.application.extended.posts.PostsAppServiceExtended;
 import com.naeem.blogs.domain.extended.posts.IPostsRepositoryExtended;
 import com.naeem.blogs.domain.core.posts.Posts;
-import com.naeem.blogs.domain.extended.users.IUsersRepositoryExtended;
+import com.naeem.blogs.domain.extended.authorization.users.IUsersRepositoryExtended;
 import com.naeem.blogs.domain.extended.posts.IPostsRepositoryExtended;
 import com.naeem.blogs.domain.core.posts.Posts;
 import com.naeem.blogs.application.extended.comments.CommentsAppServiceExtended;    
 import com.naeem.blogs.application.extended.likes.LikesAppServiceExtended;    
 import com.naeem.blogs.application.extended.postcategories.PostCategoriesAppServiceExtended;    
 import com.naeem.blogs.application.extended.posttags.PostTagsAppServiceExtended;    
-import com.naeem.blogs.application.extended.users.UsersAppServiceExtended;    
+import com.naeem.blogs.application.extended.authorization.users.UsersAppServiceExtended;    
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;

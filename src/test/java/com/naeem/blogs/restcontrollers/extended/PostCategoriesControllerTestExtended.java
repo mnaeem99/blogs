@@ -7,7 +7,7 @@ import com.naeem.blogs.domain.extended.postcategories.IPostCategoriesRepositoryE
 import com.naeem.blogs.domain.core.postcategories.PostCategories;
 import com.naeem.blogs.domain.extended.categories.ICategoriesRepositoryExtended;
 import com.naeem.blogs.domain.extended.posts.IPostsRepositoryExtended;
-import com.naeem.blogs.domain.extended.users.IUsersRepositoryExtended;
+import com.naeem.blogs.domain.extended.authorization.users.IUsersRepositoryExtended;
 import com.naeem.blogs.application.extended.categories.CategoriesAppServiceExtended;    
 import com.naeem.blogs.application.extended.posts.PostsAppServiceExtended;    
 
