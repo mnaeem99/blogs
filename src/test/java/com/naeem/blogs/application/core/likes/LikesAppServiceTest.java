@@ -36,8 +36,8 @@ import com.naeem.blogs.domain.core.likes.Likes;
 
 import com.naeem.blogs.domain.core.posts.Posts;
 import com.naeem.blogs.domain.core.posts.IPostsRepository;
-import com.naeem.blogs.domain.core.users.Users;
-import com.naeem.blogs.domain.core.users.IUsersRepository;
+import com.naeem.blogs.domain.core.authorization.users.Users;
+import com.naeem.blogs.domain.core.authorization.users.IUsersRepository;
 import com.naeem.blogs.commons.logging.LoggingHelper;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
@@ -112,7 +112,7 @@ public class LikesAppServiceTest {
 		Optional<Users> usersOptional = Optional.of((Users) users);
         likesInput.setUserId(15);
 		
-        Mockito.when(_usersRepository.findById(any(Integer.class))).thenReturn(usersOptional);
+        Mockito.when(_usersRepository.findById(any(Long.class))).thenReturn(usersOptional);
         
 		
         Mockito.when(_mapper.createLikesInputToLikes(any(CreateLikesInput.class))).thenReturn(likesEntity); 

@@ -53,8 +53,8 @@ import com.naeem.blogs.domain.core.categories.ICategoriesRepository;
 import com.naeem.blogs.domain.core.categories.Categories;
 import com.naeem.blogs.domain.core.posts.IPostsRepository;
 import com.naeem.blogs.domain.core.posts.Posts;
-import com.naeem.blogs.domain.core.users.IUsersRepository;
-import com.naeem.blogs.domain.core.users.Users;
+import com.naeem.blogs.domain.core.authorization.users.IUsersRepository;
+import com.naeem.blogs.domain.core.authorization.users.Users;
 import com.naeem.blogs.application.core.categories.CategoriesAppService;    
 import com.naeem.blogs.application.core.posts.PostsAppService;    
 import com.naeem.blogs.domain.core.postcategories.PostCategoriesId;
@@ -209,11 +209,14 @@ public class PostCategoriesControllerTest extends DatabaseContainerConfig{
 		
 		Users usersEntity = new Users();
 		
-		usersEntity.setCreatedAt(SearchUtils.stringToLocalDateTime(yearCount+"-09-"+dayCount+" 05:25:22"));
-  		usersEntity.setEmail(String.valueOf(relationCount));
-  		usersEntity.setPasswordHash(String.valueOf(relationCount));
-		usersEntity.setUpdatedAt(SearchUtils.stringToLocalDateTime(yearCount+"-09-"+dayCount+" 05:25:22"));
-		usersEntity.setUserId(relationCount);
+  		usersEntity.setEmailAddress(String.valueOf(relationCount));
+  		usersEntity.setFirstName(String.valueOf(relationCount));
+		usersEntity.setIsActive(false);
+		usersEntity.setIsEmailConfirmed(false);
+  		usersEntity.setLastName(String.valueOf(relationCount));
+  		usersEntity.setPassword(String.valueOf(relationCount));
+  		usersEntity.setPhoneNumber(String.valueOf(relationCount));
+		usersEntity.setUserId(Long.valueOf(relationCount));
   		usersEntity.setUsername(String.valueOf(relationCount));
 		usersEntity.setVersiono(0L);
 		relationCount++;

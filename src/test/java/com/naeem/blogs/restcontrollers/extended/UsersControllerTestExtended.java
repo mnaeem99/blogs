@@ -2,15 +2,20 @@ package com.naeem.blogs.restcontrollers.extended;
 
 import com.naeem.blogs.DatabaseContainerConfig;
 import com.naeem.blogs.commons.logging.LoggingHelper;
-import com.naeem.blogs.application.extended.users.UsersAppServiceExtended;
-import com.naeem.blogs.domain.extended.users.IUsersRepositoryExtended;
-import com.naeem.blogs.domain.core.users.Users;
+import com.naeem.blogs.application.extended.authorization.users.UsersAppServiceExtended;
+import com.naeem.blogs.domain.extended.authorization.users.IUsersRepositoryExtended;
+import com.naeem.blogs.domain.core.authorization.users.Users;
 import com.naeem.blogs.domain.extended.posts.IPostsRepositoryExtended;
-import com.naeem.blogs.domain.extended.users.IUsersRepositoryExtended;
-import com.naeem.blogs.domain.core.users.Users;
+import com.naeem.blogs.domain.extended.authorization.users.IUsersRepositoryExtended;
+import com.naeem.blogs.domain.core.authorization.users.Users;
 import com.naeem.blogs.application.extended.comments.CommentsAppServiceExtended;    
 import com.naeem.blogs.application.extended.likes.LikesAppServiceExtended;    
 import com.naeem.blogs.application.extended.posts.PostsAppServiceExtended;    
+import com.naeem.blogs.application.extended.authorization.userspermission.UserspermissionAppServiceExtended;    
+import com.naeem.blogs.application.extended.authorization.usersrole.UsersroleAppServiceExtended;    
+import com.naeem.blogs.security.JWTAppService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import com.naeem.blogs.domain.core.authorization.userspreference.IUserspreferenceManager;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
@@ -71,6 +76,23 @@ public class UsersControllerTestExtended extends DatabaseContainerConfig {
     @Qualifier("postsAppServiceExtended")
 	protected PostsAppServiceExtended  postsAppServiceExtended;
 	
+    @SpyBean
+    @Qualifier("userspermissionAppServiceExtended")
+	protected UserspermissionAppServiceExtended  userspermissionAppServiceExtended;
+	
+    @SpyBean
+    @Qualifier("usersroleAppServiceExtended")
+	protected UsersroleAppServiceExtended  usersroleAppServiceExtended;
+	
+    @SpyBean
+	protected IUserspreferenceManager userspreferenceManager;
+	
+	@SpyBean
+	protected JWTAppService jwtAppService;
+	
+	@SpyBean
+    protected PasswordEncoder pEncoder;
+    
 	@SpyBean
 	protected LoggingHelper logHelper;
 
@@ -104,8 +126,8 @@ public class UsersControllerTestExtended extends DatabaseContainerConfig {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
     
-		final UsersControllerExtended usersController = new UsersControllerExtended(usersAppServiceExtended, commentsAppServiceExtended, likesAppServiceExtended, postsAppServiceExtended,
-	logHelper,env);
+		final UsersControllerExtended usersController = new UsersControllerExtended(usersAppServiceExtended, commentsAppServiceExtended, likesAppServiceExtended, postsAppServiceExtended, userspermissionAppServiceExtended, usersroleAppServiceExtended,
+	pEncoder,jwtAppService,logHelper,env);
 		when(logHelper.getLogger()).thenReturn(loggerMock);
 		doNothing().when(loggerMock).error(anyString());
 

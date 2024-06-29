@@ -49,15 +49,15 @@ import com.naeem.blogs.application.core.posts.dto.*;
 import com.naeem.blogs.domain.core.posts.IPostsRepository;
 import com.naeem.blogs.domain.core.posts.Posts;
 
-import com.naeem.blogs.domain.core.users.IUsersRepository;
-import com.naeem.blogs.domain.core.users.Users;
+import com.naeem.blogs.domain.core.authorization.users.IUsersRepository;
+import com.naeem.blogs.domain.core.authorization.users.Users;
 import com.naeem.blogs.domain.core.posts.IPostsRepository;
 import com.naeem.blogs.domain.core.posts.Posts;
 import com.naeem.blogs.application.core.comments.CommentsAppService;    
 import com.naeem.blogs.application.core.likes.LikesAppService;    
 import com.naeem.blogs.application.core.postcategories.PostCategoriesAppService;    
 import com.naeem.blogs.application.core.posttags.PostTagsAppService;    
-import com.naeem.blogs.application.core.users.UsersAppService;    
+import com.naeem.blogs.application.core.authorization.users.UsersAppService;    
 import com.naeem.blogs.DatabaseContainerConfig;
 import com.naeem.blogs.domain.core.*;
 
@@ -189,11 +189,14 @@ public class PostsControllerTest extends DatabaseContainerConfig{
 		
 		Users usersEntity = new Users();
 		
-		usersEntity.setCreatedAt(SearchUtils.stringToLocalDateTime(yearCount+"-09-"+dayCount+" 05:25:22"));
-  		usersEntity.setEmail(String.valueOf(relationCount));
-  		usersEntity.setPasswordHash(String.valueOf(relationCount));
-		usersEntity.setUpdatedAt(SearchUtils.stringToLocalDateTime(yearCount+"-09-"+dayCount+" 05:25:22"));
-		usersEntity.setUserId(relationCount);
+  		usersEntity.setEmailAddress(String.valueOf(relationCount));
+  		usersEntity.setFirstName(String.valueOf(relationCount));
+		usersEntity.setIsActive(false);
+		usersEntity.setIsEmailConfirmed(false);
+  		usersEntity.setLastName(String.valueOf(relationCount));
+  		usersEntity.setPassword(String.valueOf(relationCount));
+  		usersEntity.setPhoneNumber(String.valueOf(relationCount));
+		usersEntity.setUserId(Long.valueOf(relationCount));
   		usersEntity.setUsername(String.valueOf(relationCount));
 		usersEntity.setVersiono(0L);
 		relationCount++;

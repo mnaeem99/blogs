@@ -8,7 +8,7 @@ import com.naeem.blogs.application.extended.comments.ICommentsAppServiceExtended
 import com.naeem.blogs.application.extended.likes.ILikesAppServiceExtended;
 import com.naeem.blogs.application.extended.postcategories.IPostCategoriesAppServiceExtended;
 import com.naeem.blogs.application.extended.posttags.IPostTagsAppServiceExtended;
-import com.naeem.blogs.application.extended.users.IUsersAppServiceExtended;
+import com.naeem.blogs.application.extended.authorization.users.IUsersAppServiceExtended;
 import org.springframework.core.env.Environment;
 import com.naeem.blogs.commons.logging.LoggingHelper;
 

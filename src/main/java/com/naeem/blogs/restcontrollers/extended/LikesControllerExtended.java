@@ -5,7 +5,7 @@ import com.naeem.blogs.restcontrollers.core.LikesController;
 import com.naeem.blogs.application.extended.likes.ILikesAppServiceExtended;
 
 import com.naeem.blogs.application.extended.posts.IPostsAppServiceExtended;
-import com.naeem.blogs.application.extended.users.IUsersAppServiceExtended;
+import com.naeem.blogs.application.extended.authorization.users.IUsersAppServiceExtended;
 import org.springframework.core.env.Environment;
 import com.naeem.blogs.commons.logging.LoggingHelper;
 

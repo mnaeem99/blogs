@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +19,7 @@ import com.naeem.blogs.commons.search.OffsetBasedPageRequest;
 import com.naeem.blogs.application.core.comments.ICommentsAppService;
 import com.naeem.blogs.application.core.comments.dto.*;
 import com.naeem.blogs.application.core.posts.IPostsAppService;
-import com.naeem.blogs.application.core.users.IUsersAppService;
+import com.naeem.blogs.application.core.authorization.users.IUsersAppService;
 import java.util.*;
 import java.time.*;
 import java.net.MalformedURLException;
@@ -41,6 +42,7 @@ public class CommentsController {
 
 	@NonNull protected final Environment env;
 
+    @PreAuthorize("hasAnyAuthority('COMMENTSENTITY_CREATE')")
 	@RequestMapping(method = RequestMethod.POST, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<CreateCommentsOutput> create( @RequestBody @Valid CreateCommentsInput comments) {
 		CreateCommentsOutput output=_commentsAppService.create(comments);
@@ -51,6 +53,7 @@ public class CommentsController {
 	}
 
 	// ------------ Delete comments ------------
+	@PreAuthorize("hasAnyAuthority('COMMENTSENTITY_DELETE')")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, consumes = {"application/json"})
 	public void delete(@PathVariable String id) {
@@ -65,6 +68,7 @@ public class CommentsController {
 
 
 	// ------------ Update comments ------------
+    @PreAuthorize("hasAnyAuthority('COMMENTSENTITY_UPDATE')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<UpdateCommentsOutput> update(@PathVariable String id,  @RequestBody @Valid UpdateCommentsInput comments) {
 
@@ -82,6 +86,7 @@ public class CommentsController {
 	}
     
 
+    @PreAuthorize("hasAnyAuthority('COMMENTSENTITY_READ')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<FindCommentsByIdOutput> findById(@PathVariable String id) {
 
@@ -92,6 +97,7 @@ public class CommentsController {
     	
 		return new ResponseEntity<>(output, HttpStatus.OK);
 	}
+    @PreAuthorize("hasAnyAuthority('COMMENTSENTITY_READ')")
 	@RequestMapping(method = RequestMethod.GET, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<List<FindCommentsByIdOutput>> find(@RequestParam(value="search", required=false) String search, @RequestParam(value = "offset", required=false) String offset, @RequestParam(value = "limit", required=false) String limit, Sort sort) throws EntityNotFoundException, MalformedURLException {
 
@@ -104,6 +110,7 @@ public class CommentsController {
 		return new ResponseEntity<>(_commentsAppService.find(searchCriteria,Pageable), HttpStatus.OK);
 	}
 	
+    @PreAuthorize("hasAnyAuthority('COMMENTSENTITY_READ')")
 	@RequestMapping(value = "/{id}/posts", method = RequestMethod.GET, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<GetPostsOutput> getPosts(@PathVariable String id) {
     	GetPostsOutput output= _commentsAppService.getPosts(Integer.valueOf(id));
@@ -113,6 +120,7 @@ public class CommentsController {
 
 		return new ResponseEntity<>(output, HttpStatus.OK);
 	}
+    @PreAuthorize("hasAnyAuthority('COMMENTSENTITY_READ')")
 	@RequestMapping(value = "/{id}/users", method = RequestMethod.GET, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<GetUsersOutput> getUsers(@PathVariable String id) {
     	GetUsersOutput output= _commentsAppService.getUsers(Integer.valueOf(id));

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +26,7 @@ import com.naeem.blogs.application.core.postcategories.IPostCategoriesAppService
 import com.naeem.blogs.application.core.postcategories.dto.FindPostCategoriesByIdOutput;
 import com.naeem.blogs.application.core.posttags.IPostTagsAppService;
 import com.naeem.blogs.application.core.posttags.dto.FindPostTagsByIdOutput;
-import com.naeem.blogs.application.core.users.IUsersAppService;
+import com.naeem.blogs.application.core.authorization.users.IUsersAppService;
 import java.util.*;
 import java.time.*;
 import java.net.MalformedURLException;
@@ -57,6 +58,7 @@ public class PostsController {
 
 	@NonNull protected final Environment env;
 
+    @PreAuthorize("hasAnyAuthority('POSTSENTITY_CREATE')")
 	@RequestMapping(method = RequestMethod.POST, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<CreatePostsOutput> create( @RequestBody @Valid CreatePostsInput posts) {
 		CreatePostsOutput output=_postsAppService.create(posts);
@@ -67,6 +69,7 @@ public class PostsController {
 	}
 
 	// ------------ Delete posts ------------
+	@PreAuthorize("hasAnyAuthority('POSTSENTITY_DELETE')")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, consumes = {"application/json"})
 	public void delete(@PathVariable String id) {
@@ -81,6 +84,7 @@ public class PostsController {
 
 
 	// ------------ Update posts ------------
+    @PreAuthorize("hasAnyAuthority('POSTSENTITY_UPDATE')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<UpdatePostsOutput> update(@PathVariable String id,  @RequestBody @Valid UpdatePostsInput posts) {
 
@@ -98,6 +102,7 @@ public class PostsController {
 	}
     
 
+    @PreAuthorize("hasAnyAuthority('POSTSENTITY_READ')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<FindPostsByIdOutput> findById(@PathVariable String id) {
 
@@ -108,6 +113,7 @@ public class PostsController {
     	
 		return new ResponseEntity<>(output, HttpStatus.OK);
 	}
+    @PreAuthorize("hasAnyAuthority('POSTSENTITY_READ')")
 	@RequestMapping(method = RequestMethod.GET, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<List<FindPostsByIdOutput>> find(@RequestParam(value="search", required=false) String search, @RequestParam(value = "offset", required=false) String offset, @RequestParam(value = "limit", required=false) String limit, Sort sort) throws EntityNotFoundException, MalformedURLException {
 
@@ -120,6 +126,7 @@ public class PostsController {
 		return new ResponseEntity<>(_postsAppService.find(searchCriteria,Pageable), HttpStatus.OK);
 	}
 	
+    @PreAuthorize("hasAnyAuthority('POSTSENTITY_READ')")
 	@RequestMapping(value = "/{id}/comments", method = RequestMethod.GET, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<List<FindCommentsByIdOutput>> getComments(@PathVariable String id, @RequestParam(value="search", required=false) String search, @RequestParam(value = "offset", required=false) String offset, @RequestParam(value = "limit", required=false) String limit, Sort sort) throws EntityNotFoundException, MalformedURLException {
    		if (offset == null) { offset = env.getProperty("blog.offset.default"); }
@@ -143,6 +150,7 @@ public class PostsController {
 		
 		return new ResponseEntity<>(output, HttpStatus.OK);
 	}
+    @PreAuthorize("hasAnyAuthority('POSTSENTITY_READ')")
 	@RequestMapping(value = "/{id}/likes", method = RequestMethod.GET, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<List<FindLikesByIdOutput>> getLikes(@PathVariable String id, @RequestParam(value="search", required=false) String search, @RequestParam(value = "offset", required=false) String offset, @RequestParam(value = "limit", required=false) String limit, Sort sort) throws EntityNotFoundException, MalformedURLException {
    		if (offset == null) { offset = env.getProperty("blog.offset.default"); }
@@ -166,6 +174,7 @@ public class PostsController {
 		
 		return new ResponseEntity<>(output, HttpStatus.OK);
 	}
+    @PreAuthorize("hasAnyAuthority('POSTSENTITY_READ')")
 	@RequestMapping(value = "/{id}/postCategories", method = RequestMethod.GET, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<List<FindPostCategoriesByIdOutput>> getPostCategories(@PathVariable String id, @RequestParam(value="search", required=false) String search, @RequestParam(value = "offset", required=false) String offset, @RequestParam(value = "limit", required=false) String limit, Sort sort) throws EntityNotFoundException, MalformedURLException {
    		if (offset == null) { offset = env.getProperty("blog.offset.default"); }
@@ -189,6 +198,7 @@ public class PostsController {
 		
 		return new ResponseEntity<>(output, HttpStatus.OK);
 	}
+    @PreAuthorize("hasAnyAuthority('POSTSENTITY_READ')")
 	@RequestMapping(value = "/{id}/postTags", method = RequestMethod.GET, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<List<FindPostTagsByIdOutput>> getPostTags(@PathVariable String id, @RequestParam(value="search", required=false) String search, @RequestParam(value = "offset", required=false) String offset, @RequestParam(value = "limit", required=false) String limit, Sort sort) throws EntityNotFoundException, MalformedURLException {
    		if (offset == null) { offset = env.getProperty("blog.offset.default"); }
@@ -212,6 +222,7 @@ public class PostsController {
 		
 		return new ResponseEntity<>(output, HttpStatus.OK);
 	}
+    @PreAuthorize("hasAnyAuthority('POSTSENTITY_READ')")
 	@RequestMapping(value = "/{id}/users", method = RequestMethod.GET, consumes = {"application/json"}, produces = {"application/json"})
 	public ResponseEntity<GetUsersOutput> getUsers(@PathVariable String id) {
     	GetUsersOutput output= _postsAppService.getUsers(Integer.valueOf(id));

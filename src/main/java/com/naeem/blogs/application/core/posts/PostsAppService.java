@@ -6,8 +6,8 @@ import com.naeem.blogs.application.core.posts.dto.*;
 import com.naeem.blogs.domain.core.posts.IPostsRepository;
 import com.naeem.blogs.domain.core.posts.QPosts;
 import com.naeem.blogs.domain.core.posts.Posts;
-import com.naeem.blogs.domain.core.users.IUsersRepository;
-import com.naeem.blogs.domain.core.users.Users;
+import com.naeem.blogs.domain.core.authorization.users.IUsersRepository;
+import com.naeem.blogs.domain.core.authorization.users.Users;
 
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -47,7 +47,7 @@ public class PostsAppService implements IPostsAppService {
 		Posts posts = mapper.createPostsInputToPosts(input);
 		Users foundUsers = null;
 	  	if(input.getAuthorId()!=null) {
-			foundUsers = _usersRepository.findById(input.getAuthorId()).orElse(null);
+		    foundUsers = _usersRepository.findById(Long.parseLong(input.getAuthorId().toString())).orElse(null);
 			
 			if(foundUsers!=null) {
 				foundUsers.addPosts(posts);
@@ -77,7 +77,7 @@ public class PostsAppService implements IPostsAppService {
 		Users foundUsers = null;
         
 	  	if(input.getAuthorId()!=null) { 
-			foundUsers = _usersRepository.findById(input.getAuthorId()).orElse(null);
+		    foundUsers = _usersRepository.findById(Long.parseLong(input.getAuthorId().toString())).orElse(null);
 		
 			if(foundUsers!=null) {
 				foundUsers.addPosts(posts);
@@ -260,22 +260,22 @@ public class PostsAppService implements IPostsAppService {
 	    
 		    if(details.getKey().replace("%20","").trim().equals("users")) {
 				if(details.getValue().getOperator().equals("contains")) {
-					builder.and(posts.users.email.likeIgnoreCase("%"+ details.getValue().getSearchValue() + "%"));
+					builder.and(posts.users.username.likeIgnoreCase("%"+ details.getValue().getSearchValue() + "%"));
 				} else if(details.getValue().getOperator().equals("equals")) {
-					builder.and(posts.users.email.eq(details.getValue().getSearchValue()));
+					builder.and(posts.users.username.eq(details.getValue().getSearchValue()));
 				} else if(details.getValue().getOperator().equals("notEqual")) {
-					builder.and(posts.users.email.ne(details.getValue().getSearchValue()));
+					builder.and(posts.users.username.ne(details.getValue().getSearchValue()));
 				}
 			}
 		}
 		
 		for (Map.Entry<String, String> joinCol : joinColumns.entrySet()) {
-		if(joinCol != null && joinCol.getKey().equals("authorId")) {
-		    builder.and(posts.users.userId.eq(Integer.parseInt(joinCol.getValue())));
-		}
+        if(joinCol != null && joinCol.getKey().equals("authorId")) {
+		    builder.and(posts.users.userId.eq(Long.parseLong(joinCol.getValue())));
+        }
         
 		if(joinCol != null && joinCol.getKey().equals("users")) {
-		    builder.and(posts.users.email.eq(joinCol.getValue()));
+		    builder.and(posts.users.username.eq(joinCol.getValue()));
         }
         }
 		return builder;

@@ -5,4 +5,22 @@
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
     
-     </databaseChangeLog>
+         <changeSet author="blog, Inc" id="permission_1">
+    	<loadData encoding="UTF-8" file="db/data/permission_1.csv" separator="," tableName="permission"/>
+    </changeSet>
+    <changeSet author="blog, Inc" id="role">
+    	<loadData encoding="UTF-8" file="db/data/role.csv" separator="," tableName="role"/>
+    </changeSet>
+    <changeSet author="blog, Inc" id="rolepermission">
+    	<loadData encoding="UTF-8" file="db/data/rolepermission.csv" separator="," tableName="rolepermission"/>
+	</changeSet>
+	<changeSet author="blog, Inc" id="user">
+    	<loadData encoding="UTF-8" file="db/data/user.csv" separator="," tableName="users"/>
+	</changeSet>
+    <changeSet author="blog, Inc" id="userrole">
+    	<loadData encoding="UTF-8" file="db/data/userrole.csv" separator="," tableName="usersrole"/>
+	</changeSet>
+	<changeSet author="blog, Inc" id="userpreference">
+    	<loadData encoding="UTF-8" file="db/data/userpreference.csv" separator="," tableName="userspreference"/>
+	</changeSet>
+</databaseChangeLog>

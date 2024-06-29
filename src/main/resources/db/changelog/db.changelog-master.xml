@@ -8,4 +8,6 @@
          
                   <include file="db/changelog/db.initialTables.xml" relativeToChangelogFile="false"/>
   		 <include file="db/changelog/db.addVersionToExistingTables_1.xml" relativeToChangelogFile="false"/>
+         <include file="db/changelog/db.quartzTables.xml" relativeToChangelogFile="false"/>
+  		 <include file="db/changelog/db.data.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

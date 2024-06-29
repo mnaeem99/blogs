@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import com.naeem.blogs.application.core.posts.PostsAppService;
 
 import com.naeem.blogs.domain.extended.posts.IPostsRepositoryExtended;
-import com.naeem.blogs.domain.extended.users.IUsersRepositoryExtended;
+import com.naeem.blogs.domain.extended.authorization.users.IUsersRepositoryExtended;
 import com.naeem.blogs.commons.logging.LoggingHelper;
 
 @Service("postsAppServiceExtended")

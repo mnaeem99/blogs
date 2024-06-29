@@ -1,7 +1,198 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-     
+        <changeSet author="blog, Inc" id="000000-000001">
+        <createTable tableName="permission">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="permission_pkey"/>
+            </column>
+            <column name="display_name" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        
+         <addUniqueConstraint columnNames="name" 
+        	constraintName="uk_permission_name" 
+        	tableName="permission"/>
+        
+    </changeSet>
+    <changeSet author="blog, Inc" id="000000-000002">
+        <createTable tableName="role">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="role_pkey"/>
+            </column>
+            <column name="display_name" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+         <addUniqueConstraint columnNames="name" 
+        	constraintName="uk_role_name" 
+        	tableName="role"/>
+    </changeSet>
+   
+    <changeSet author="blog, Inc" id="000000-000003">
+        <createTable tableName="rolepermission">
+            <column name="permission_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="rolepermission_pkey"/>
+            </column>
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="rolepermission_pkey"/>
+            </column>
+  
+        </createTable>
+        
+        <addForeignKeyConstraint baseColumnNames="permission_id"
+         	baseTableName="rolepermission" 
+         	constraintName="fk_rolepermission_permission_id" 
+         	deferrable="false" 
+         	initiallyDeferred="false"
+         	onDelete="CASCADE" 
+         	onUpdate="NO ACTION" 
+         	referencedColumnNames="id"
+         	referencedTableName="permission" 
+         	validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="role_id"
+         	baseTableName="rolepermission" 
+         	constraintName="fk_rolepermission_role_id"
+          	deferrable="false" 
+          	initiallyDeferred="false" 
+          	onDelete="CASCADE" 
+          	onUpdate="NO ACTION" 
+          	referencedColumnNames="id" 
+          	referencedTableName="role" 
+          	validate="true"/>
+        
+    </changeSet>
+    <changeSet author="blog, Inc" id="000000-000007">
+        <createTable tableName="usersrole">
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="usersrole_pkey"/>
+            </column>
+  			<column name="users_user_id" type="int8">
+  			 <constraints nullable="false" primaryKey="true" primaryKeyName="usersrole_pkey"/>
+            </column>
+        </createTable>
+        
+  		<addForeignKeyConstraint baseColumnNames="users_user_id"
+        baseTableName="usersrole"
+        constraintName="fk_usersrole_users"
+  		deferrable="false" initiallyDeferred="false" 
+        onDelete="CASCADE" onUpdate="NO ACTION" 
+        referencedColumnNames="user_id"
+        referencedTableName="users"
+        validate="true"/>
+  		
+        
+        <addForeignKeyConstraint baseColumnNames="role_id" 
+        baseTableName="usersrole"
+        constraintName="fk_usersrole_role_id"
+        deferrable="false" initiallyDeferred="false" 
+        onDelete="CASCADE" onUpdate="NO ACTION" 
+        referencedColumnNames="id" 
+        referencedTableName="role"
+        validate="true"/>
+    </changeSet>
+    
+    <changeSet author="blog, Inc" id="000000-000008">
+        <createTable tableName="userspermission">
+            <column name="permission_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="userspermission_pkey"/>
+            </column>
+  			<column name="users_user_id" type="int8">
+  			<constraints nullable="false" primaryKey="true" primaryKeyName="userspermission_pkey"/>
+            </column>
+            <column name="revoked" type="BOOLEAN"/>
+            
+        </createTable>
+        
+        
+        <addForeignKeyConstraint baseColumnNames="users_user_id"
+        baseTableName="userspermission"
+        constraintName="fk_userspermission_users"
+  		deferrable="false" initiallyDeferred="false" 
+        onDelete="CASCADE" onUpdate="NO ACTION" 
+        referencedColumnNames="user_id"
+        referencedTableName="users"
+        validate="true"/>
+  		
+        
+        <addForeignKeyConstraint baseColumnNames="permission_id" 
+        baseTableName="userspermission"
+        constraintName="fk_userspermission_permission_id"
+        deferrable="false" initiallyDeferred="false" 
+        onDelete="CASCADE" onUpdate="NO ACTION" 
+        referencedColumnNames="id" 
+        referencedTableName="permission"
+        validate="true"/>
+    </changeSet>
+     <changeSet author="blog, Inc" id="000000-000009">
+        <createTable tableName="userspreference">
+  			<column name="user_id" type="int8">
+  			 <constraints nullable="false" primaryKey="true" primaryKeyName="userspreference_pkey"/>
+            </column>
+            <column name="language" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="theme" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        
+        <addForeignKeyConstraint baseColumnNames="user_id"
+        baseTableName="userspreference"
+        constraintName="fkr_userspreference" deferrable="false" initiallyDeferred="false"
+        onDelete="CASCADE" onUpdate="NO ACTION" 
+        referencedColumnNames="user_id"
+        referencedTableName="users"
+        validate="true"/>
+       
+    </changeSet>
+     <changeSet author="blog, Inc" id="000000-000010">
+        <createTable tableName="tokenverification">
+  			<column name="users_user_id" type="int8">
+  			 <constraints nullable="false" primaryKey="true" primaryKeyName="tokenverification_pkey"/>
+            </column>
+            <column name="token_type" type="VARCHAR(20)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tokenverification_pkey"/>
+            </column>
+            
+            <column name="expiration_time" type="TIMESTAMP"/>
+            <column name="token" type="VARCHAR(512)"/>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="users_user_id"
+        baseTableName="tokenverification" 
+        constraintName="fk_tokenverification_users" deferrable="false" initiallyDeferred="false" 
+        onDelete="CASCADE" onUpdate="NO ACTION" 
+        referencedColumnNames="user_id"
+        referencedTableName="users"
+        validate="true"/>
+    
+    </changeSet>
+      <changeSet author="blog, Inc" id="000000-000011">
+        <createTable tableName="jwt_entity">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="jwt_entity_pkey"/>
+            </column>
+            <column name="authorization_token" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="authentication_token" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_name" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        
+    </changeSet>
+ 
      
 
 

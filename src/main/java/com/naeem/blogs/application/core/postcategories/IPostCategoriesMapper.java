@@ -34,18 +34,18 @@ public interface IPostCategoriesMapper {
 
 
    @Mappings({
-   @Mapping(source = "categories.categoryId", target = "categoryId"),                  
-   @Mapping(source = "foundPostCategories.categoryId", target = "postCategoriesCategoryId"),
-   @Mapping(source = "foundPostCategories.postId", target = "postCategoriesPostId"),
-   })
-   GetCategoriesOutput categoriesToGetCategoriesOutput(Categories categories, PostCategories foundPostCategories);
-   
-   @Mappings({
    @Mapping(source = "posts.postId", target = "postId"),                  
    @Mapping(source = "foundPostCategories.categoryId", target = "postCategoriesCategoryId"),
    @Mapping(source = "foundPostCategories.postId", target = "postCategoriesPostId"),
    })
    GetPostsOutput postsToGetPostsOutput(Posts posts, PostCategories foundPostCategories);
+   
+   @Mappings({
+   @Mapping(source = "categories.categoryId", target = "categoryId"),                  
+   @Mapping(source = "foundPostCategories.categoryId", target = "postCategoriesCategoryId"),
+   @Mapping(source = "foundPostCategories.postId", target = "postCategoriesPostId"),
+   })
+   GetCategoriesOutput categoriesToGetCategoriesOutput(Categories categories, PostCategories foundPostCategories);
    
 }
 

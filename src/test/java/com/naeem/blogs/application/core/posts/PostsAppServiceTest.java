@@ -34,8 +34,8 @@ import com.naeem.blogs.application.core.posts.dto.*;
 import com.naeem.blogs.domain.core.posts.QPosts;
 import com.naeem.blogs.domain.core.posts.Posts;
 
-import com.naeem.blogs.domain.core.users.Users;
-import com.naeem.blogs.domain.core.users.IUsersRepository;
+import com.naeem.blogs.domain.core.authorization.users.Users;
+import com.naeem.blogs.domain.core.authorization.users.IUsersRepository;
 import com.naeem.blogs.commons.logging.LoggingHelper;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
@@ -100,7 +100,7 @@ public class PostsAppServiceTest {
 		Optional<Users> usersOptional = Optional.of((Users) users);
         postsInput.setAuthorId(15);
 		
-        Mockito.when(_usersRepository.findById(any(Integer.class))).thenReturn(usersOptional);
+        Mockito.when(_usersRepository.findById(any(Long.class))).thenReturn(usersOptional);
         
 		
         Mockito.when(_mapper.createPostsInputToPosts(any(CreatePostsInput.class))).thenReturn(postsEntity); 
@@ -126,9 +126,9 @@ public class PostsAppServiceTest {
         posts.setAuthorId(15);
      
      	Optional<Users> nullOptional = Optional.ofNullable(null);
-        Mockito.when(_usersRepository.findById(any(Integer.class))).thenReturn(nullOptional);
+        Mockito.when(_usersRepository.findById(any(Long.class))).thenReturn(nullOptional);
         
-//		Mockito.when(_usersRepository.findById(any(Integer.class))).thenReturn(nullOptional);
+//		Mockito.when(_usersRepository.findById(any(Long.class))).thenReturn(nullOptional);
 		Assertions.assertThat(_appService.create(posts)).isEqualTo(null);
     }
     
@@ -158,9 +158,9 @@ public class PostsAppServiceTest {
 		
 		Mockito.when(_mapper.updatePostsInputToPosts(any(UpdatePostsInput.class))).thenReturn(posts);
      	Optional<Users> nullOptional = Optional.ofNullable(null);
-        Mockito.when(_usersRepository.findById(any(Integer.class))).thenReturn(nullOptional);
+        Mockito.when(_usersRepository.findById(any(Long.class))).thenReturn(nullOptional);
         
-	//	Mockito.when(_usersRepository.findById(any(Integer.class))).thenReturn(nullOptional);
+	//	Mockito.when(_usersRepository.findById(any(Long.class))).thenReturn(nullOptional);
 		Assertions.assertThat(_appService.update(ID,postsInput)).isEqualTo(null);
 	}
 
